@@ -4,45 +4,34 @@ using UnityEngine;
 
 public class EnemyMovement : MonoBehaviour
 {
-
-    // Start is called before the first frame update
-    [SerializeField] Vector3 direction = new Vector3(0, 0, 1);
     [SerializeField] float speed = 2f;
-
-    [SerializeField] float offsetX = 20f;
-
-    [SerializeField] bool isLeft = true;
     // Start is called before the first frame update
+
+    private GameObject player;
     void Start()
     {
-
+        player = GameObject.Find("Player");
     }
 
     // Update is called once per frame
     void Update()
     {
+        LookAtPlayer();
+        MoveTowards();
+    }
 
-        if(isLeft){
-            MoveEnemy(Vector3.left);
-        }else
+    private void MoveTowards()
+    {
+        Vector3 direction = (player.transform.position - transform.position);
+        if (direction.magnitude > 3)
         {
-            MoveEnemy(Vector3.right);
-        }
-
-  
-        if (transform.position.x < -offsetX)
-        {
-            isLeft = false;
-        }
-
-        if (transform.position.x > offsetX)
-        {
-            isLeft = true;
+            transform.position += speed * direction.normalized * Time.deltaTime;
         }
     }
 
-    private void MoveEnemy(Vector3 directionEnemy)
+    private void LookAtPlayer()
     {
-        transform.Translate(speed * Time.deltaTime *  directionEnemy);
+        Quaternion newRotation = Quaternion.LookRotation(player.transform.position - transform.position);
+        transform.rotation = newRotation;
     }
 }

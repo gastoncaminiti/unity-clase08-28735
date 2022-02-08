@@ -18,47 +18,36 @@ public class PlayerMovement : MonoBehaviour
 
      [SerializeField] private float timePass = 0;
 
+    float cameraAxisX = 0f;
+
     void Start()
     {
 
     }
-
-    // Update is called once per frame
     void Update()
     {
+   
         //SI APRIETO W
         if (Input.GetKey(KeyCode.W))
         {
-            MovePlayer(Vector3.right);
-        }
-        if (Input.GetKey(KeyCode.S))
-        {
-            //SI APRIETO S
-            MovePlayer(Vector3.left);
-        }
-        //SI APRIETO A
-        if (Input.GetKey(KeyCode.A))
-        {
             MovePlayer(Vector3.forward);
         }
-        //SI APRIETO D
-        if (Input.GetKey(KeyCode.D))
+        if (Input.GetKey(KeyCode.S))
         {
             MovePlayer(Vector3.back);
         }
 
-        //SI APRIETO E
+        RotatePlaye();
+
         if (Input.GetKeyDown(KeyCode.E) && canShoot)
         {
-            //
             Instantiate(bulletPrefab, shootPoint.transform.position, bulletPrefab.transform.rotation);// PROYECTILES
             Instantiate(bulletPrefab, shootPoint.transform.position + Vector3.forward, bulletPrefab.transform.rotation);// PROYECTILES\
-             Instantiate(bulletPrefab, shootPoint.transform.position + Vector3.back, bulletPrefab.transform.rotation);// PROYECTILES
-            
+            Instantiate(bulletPrefab, shootPoint.transform.position + Vector3.back, bulletPrefab.transform.rotation);// PROYECTILES
             canShoot = false;
         }
-
-
+       
+      
         if(!canShoot){
             //timePass = timePass + Time.deltaTime;
             timePass += Time.deltaTime;
@@ -74,5 +63,14 @@ public class PlayerMovement : MonoBehaviour
     private void MovePlayer(Vector3 directionEnemy)
     {
         transform.Translate(speed * Time.deltaTime * directionEnemy);
+    }
+
+    private void RotatePlaye(){
+        //1 UN VALOR PARA ROTAR EN Y
+        cameraAxisX += Input.GetAxis("Mouse X");   
+        //2 UN ANGULO A CALCULAR EN FUNCION DEL VALOR DEL PRIMER PASO
+        Quaternion angulo = Quaternion.Euler(0f,cameraAxisX, 0f);
+        //3 ROTAR
+        transform.localRotation = angulo;
     }
 }
